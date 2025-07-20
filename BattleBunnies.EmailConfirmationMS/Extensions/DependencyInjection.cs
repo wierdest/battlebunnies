@@ -16,11 +16,15 @@ public static class DependencyInjection
     {
         services.AddMessagingInfrastructure();
 
+        services.Configure<ConfirmationSettings>(config.GetSection("Confirmation"));
+
         services.Configure<SMTPSettings>(config.GetSection("SMTP"));
 
         services.AddSingleton<IEmailSender, SMTPEmailSender>();
 
         services.AddSingleton<ICodeGenerator, CodeGenerator>();
+
+        services.AddSingleton<IConfirmationLinkFactory, ConfirmationLinkFactory>();
 
         services.Configure<RedisSettings>(config.GetSection("Redis"));
 

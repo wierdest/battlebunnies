@@ -11,6 +11,7 @@ public class UserRegisteredHostedService(
     IMessageConsumer consumer,
     IEmailSender emailSender,
     ICodeGenerator codeGenerator,
+    IConfirmationLinkFactory confirmationLinkFactory,
     IConfirmationStore confirmationStore) :  BackgroundService
 {
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
@@ -21,7 +22,13 @@ public class UserRegisteredHostedService(
             {
                 var code = codeGenerator.Generate();
 
-                await emailSender.SendAsync(message.Email, "This is your confirmation email", code);
+                var link = confirmationLinkFactory.Create(message.Email, code);
+
+                await emailSender.SendAsync(
+                    message.Email,
+                    "Confirm your battlebunnies access: ",
+                    $"Click the link to confirm:\n${link}"
+                );
 
                 await confirmationStore.StoreConfirmationAsync(message.Email, code, stoppingToken);
 

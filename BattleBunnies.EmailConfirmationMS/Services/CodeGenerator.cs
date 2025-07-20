@@ -1,14 +1,27 @@
 using System;
+using System.Security.Cryptography;
+using System.Text;
 using BattleBunnies.EmailConfirmationMS.Abstractions;
+using BattleBunnies.EmailConfirmationMS.Settings;
+using Microsoft.Extensions.Options;
 
 namespace BattleBunnies.EmailConfirmationMS.Services;
 
-public class CodeGenerator : ICodeGenerator
+public class CodeGenerator(IOptions<ConfirmationSettings> options) : ICodeGenerator
 {
-    private const string Characters = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
-    public string Generate(int length = 6)
+    private readonly byte[] _secret = Encoding.UTF8.GetBytes(options.Value.CodeSecretKey);
+    public string Generate(int length = 32)
     {
-        var random = new Random();
-        return new string([.. Enumerable.Range(0, length).Select(_ => Characters[random.Next(Characters.Length)])]);
+        var now = DateTimeOffset.UtcNow.ToUnixTimeMilliseconds().ToString();
+        var nonce = Guid.NewGuid().ToString("N");
+        var payload = $"{now}:{nonce}";
+        using var hmac = new HMACSHA256(_secret);
+        var hashBytes = hmac.ComputeHash(Encoding.UTF8.GetBytes(payload));
+        var base64 = Convert.ToBase64String(hashBytes)
+            .TrimEnd('=')
+            .Replace('+', '-')
+            .Replace('/', '_');
+        
+        return base64[..Math.Min(length, base64.Length)];
     }
 }

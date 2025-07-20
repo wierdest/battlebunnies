@@ -4,5 +4,5 @@ namespace BattleBunnies.EmailConfirmationMS.Abstractions;
 
 public interface ICodeGenerator
 {
-    string Generate(int length = 6);
+    string Generate(int length = 32);
 }
