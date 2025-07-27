@@ -27,7 +27,7 @@ public class UserRegisteredHostedService(
                 await emailSender.SendAsync(
                     message.Email,
                     "Confirm your battlebunnies access: ",
-                    $"Click the link to confirm:\n${link}"
+                    $"Click the link to confirm:\n{link}"
                 );
 
                 await confirmationStore.StoreConfirmationAsync(message.Email, code, stoppingToken);

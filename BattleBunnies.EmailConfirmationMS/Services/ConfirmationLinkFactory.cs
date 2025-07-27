@@ -13,6 +13,6 @@ public class ConfirmationLinkFactory(IOptions<ConfirmationSettings> options) : I
         var encodedEmail = Uri.EscapeDataString(email);
         var encodedCode = Uri.EscapeDataString(code);
 
-        return $"{_baseUrl}?email=${encodedEmail}&code={encodedCode}";
+        return $"{_baseUrl}?email={encodedEmail}&code={encodedCode}";
     }
 }
