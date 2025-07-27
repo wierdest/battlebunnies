@@ -12,15 +12,19 @@ namespace BattleBunnies.EmailConfirmationMS.Extensions;
 
 public static class DependencyInjection
 {
-    public static IServiceCollection AddWorker(this IServiceCollection services, IConfiguration config)
+    public static IServiceCollection AddServiceWorkers(this IServiceCollection services, IConfiguration config)
     {
         services.AddMessagingInfrastructure();
+
+        services.Configure<ConfirmationSettings>(config.GetSection("Confirmation"));
 
         services.Configure<SMTPSettings>(config.GetSection("SMTP"));
 
         services.AddSingleton<IEmailSender, SMTPEmailSender>();
 
         services.AddSingleton<ICodeGenerator, CodeGenerator>();
+
+        services.AddSingleton<IConfirmationLinkFactory, ConfirmationLinkFactory>();
 
         services.Configure<RedisSettings>(config.GetSection("Redis"));
 
@@ -34,6 +38,8 @@ public static class DependencyInjection
         services.AddSingleton<IConfirmationStore, ConfirmationStore>();
         
         services.AddHostedService<UserRegisteredHostedService>();
+
+        services.AddHostedService<UserRequestedConfirmationHostedService>();
 
         return services;
     }

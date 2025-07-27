@@ -485,6 +485,6 @@ $RECYCLE.BIN/
 
 # Some stuff I want to ignore
 curls.md
-create-environment.sh
-create-environment.md
 problems-with-compose/
+redis-commands.md
+env.yaml
