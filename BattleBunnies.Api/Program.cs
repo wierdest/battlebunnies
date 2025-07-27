@@ -1,5 +1,6 @@
 using BattleBunnies.Api.Battles.UseCases.GetById;
 using BattleBunnies.Api.Battles.UseCases.Start;
+using BattleBunnies.Api.Users.UseCases.Confirm;
 using BattleBunnies.Api.Users.UseCases.Register;
 using BattleBunnies.Application.Extensions;
 using BattleBunnies.Infrastructure.Extensions;
@@ -14,6 +15,8 @@ app.MapStartBattleEndpoint();
 app.MapGetBattleByIdEndpoint();
 
 app.MapRegisterUserEndpoint();
+
+app.MapConfirmUserEndpoint();
 
 app.UseHttpsRedirection();
 

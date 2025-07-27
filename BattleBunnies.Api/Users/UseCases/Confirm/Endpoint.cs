@@ -8,7 +8,7 @@ public static class Endpoint
 {
     public static void MapConfirmUserEndpoint(this IEndpointRouteBuilder app)
     {
-        app.MapGet("api/users/confirm", async ([FromQuery] string email, [FromQuery] string code, IMediator mediator) =>
+        app.MapGet("/api/users/confirm", async ([FromQuery] string email, [FromQuery] string code, IMediator mediator) =>
         {
             var command = new Command(email, code);
 
